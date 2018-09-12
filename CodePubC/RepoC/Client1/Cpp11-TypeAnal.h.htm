@@ -1,0 +1,72 @@
+<!----------------------------------------------------------------------------
+   - Html file of source code file from Project #3
+  Zhen Xia, CSE687 - Object Oriented Design, Spring 2017
+----------------------------------------------------------------------------->
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="Publisher.css" />
+    <script src="script.js"></script>
+</head>
+<body>
+    <h3 id="filename">Cpp11-TypeAnal.h</h3>
+    <hr />
+    <a href="Catalog.htm">[To Main Catalog]</a>
+    <hr />
+    <div id="dependency" class="indent">
+        <h4>Dependencies:</h4>
+        <a href="Cpp11-TypeTable.h.htm">Cpp11-TypeTable.h</a>
+    </div>
+    <hr />
+<pre id="code">
+#ifndef TypeAnal_H
+#define TypeAnal_H
+///////////////////////////////////////////////////////////////
+// TypeAnal.h -  Utility for type analysis based on TypeTalbe//
+//                                                           //
+// Language:    Visual C++                                   //
+// Platform:    Alienware15, Windows 10                      //
+// Author:      Zhen Xia, CIS687, Syracuse University        //
+///////////////////////////////////////////////////////////////
+/*
+Package Operations:
+===================
+The Utility-TypeAnal accept a AbstractSyntaxTree object and do
+DFS on the root Node of this tree. When reaching a ASTNode, 
+extract information from this node and store the information
+into TableRecord, then storing the TableRecord into TypeTable
+
+Maintanence Information:
+========================
+Required files:
+---------------
+TypeAnal.h, Typetable.h,
+AbstrSynTree.h,ConfigurePaser.cpp,
+FileSystem.h
+*/
+#include &lt;iostream&gt;
+#include &lt;functional&gt;
+#include "../TypeTable/TypeTable.h"
+#include "../AbstractSyntaxTree/AbstrSynTree.h"
+
+namespace CodeAnalysis
+<button id="0" type="button" onclick="expand(0,1)">-</button><span id = "1">{
+	class TypeAnal
+<button id="2" type="button" onclick="expand(2,3)">-</button>	<span id = "3">{
+	public:
+		TypeAnal(TypeTable& table);
+		~TypeAnal();
+		void doTypeAnal(); //do type analysis for TPtable
+		void DFS(ASTNode* pNode); //DFS search done on ASTref
+		bool doAction(ASTNode* node); //store information for 
+		                              //every ASTNode into type table
+		bool doDisplay(ASTNode* node);
+	private:
+		AbstrSynTree& ASTref_; // store the parsing result
+		TypeTable& TPtable;
+	}</span>;
+}</span>
+#endif
+
+</pre>
+</body>
+</html>

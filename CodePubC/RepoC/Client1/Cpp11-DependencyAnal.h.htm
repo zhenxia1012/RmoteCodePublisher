@@ -1,0 +1,86 @@
+<!----------------------------------------------------------------------------
+   - Html file of source code file from Project #3
+  Zhen Xia, CSE687 - Object Oriented Design, Spring 2017
+----------------------------------------------------------------------------->
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="Publisher.css" />
+    <script src="script.js"></script>
+</head>
+<body>
+    <h3 id="filename">Cpp11-DependencyAnal.h</h3>
+    <hr />
+    <a href="Catalog.htm">[To Main Catalog]</a>
+    <hr />
+    <div id="dependency" class="indent">
+        <h4>Dependencies:</h4>
+        <a href="Cpp11-TypeTable.h.htm">Cpp11-TypeTable.h</a>
+    </div>
+    <hr />
+<pre id="code">
+#ifndef DEPENDENCYANAL_H
+#define DEPENDENCYANAL_H
+///////////////////////////////////////////////////////////////
+// DependencyAnal.h -  Utility for dependency analysis based //
+//                     type table                            //
+//                                                           //
+// Language:    Visual C++                                   //
+// Platform:    Alienware15, Windows 10                      //
+// Author:      Zhen Xia, CIS687, Syracuse University        //
+///////////////////////////////////////////////////////////////
+/*
+Package Operations:
+===================
+The Utility-DependencyAnal if for dependency analysis based on
+type table.It will compare table records from type table to 
+tokens from every file. Every time it fetches one record from 
+type table and compare its type name to tokens from every file 
+in file collection. If it succeeds in finding the same token value
+as the name of the type in a specific file, it then will try to 
+find the same namespace with tokens in that file. Only it finds 
+the same type name and same namespace, will it has the dependency 
+relationship with that file.
+
+Maintanence Information:
+========================
+Required files:
+---------------
+DependencyAnal.h, NoSqlDb.h
+TypeAnal.h, Typetable.h,
+ConfigurePaser.cpp
+*/
+#include &lt;iostream&gt;
+#include &lt;functional&gt;
+#include "../TypeTable/TypeTable.h"
+#include "../Parser/ConfigureParser.h"
+#include "../NoSqlDb/NoSqlDb.h"
+
+namespace CodeAnalysis
+<button id="0" type="button" onclick="expand(0,1)">-</button><span id = "1">{
+	class DependencyAnal
+<button id="2" type="button" onclick="expand(2,3)">-</button>	<span id = "3">{
+	public:
+		DependencyAnal(TypeTable& table, NoSqlDb&lt;std::string&gt;& dtbs_);
+		~DependencyAnal();
+		void etractFiles(); // extract all the file paths from type table
+		void DFS(ASTNode* pNode); // is for extracting all the file paths
+		void iniDb(); // initialize the Non-SQL db with every file
+		void doDepenAnal(); // do the dependency analysis
+		bool doFind(std::string parent, std::string child); // find whether two files 
+		                                                    // have been recorded for their dependency
+		bool isDep(std::string token, std::string path);  // find whether two files have dependency
+		bool doSave(std::string parent, std::string child); // save two dependency into db
+	private:
+		std::vector&lt;std::string&gt; files; // file paths
+		AbstrSynTree& ASTref_; // store the parsing result
+		TypeTable& TPtable; // based for dependency analysis
+		NoSqlDb&lt;std::string&gt;& db_;// store the denpendency analysis result
+	}</span>;
+}</span>
+#endif
+
+
+
+</pre>
+</body>
+</html>
