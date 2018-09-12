@@ -1,7 +1,7 @@
 # RmoteCodePublisher
 Remote Code Publisher are mainly used for clients to manage their source code files on the server side. 
 
-Remote Code Publisher are mainly used for clients to manage their source code files on the server side. It consists of three major components: code publisher server, client interface, message-passing system.
+It consists of three major components: code publisher server, client interface, message-passing system.
 
 A code publisher server
 -	manage the source code files for clients
