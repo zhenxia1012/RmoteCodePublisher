@@ -1,0 +1,185 @@
+<!----------------------------------------------------------------------------
+   - Html file of source code file from Project #3
+  Zhen Xia, CSE687 - Object Oriented Design, Spring 2017
+----------------------------------------------------------------------------->
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="Publisher.css" />
+    <script src="script.js"></script>
+</head>
+<body>
+    <h3 id="filename">Cpp11-TypeAnal.cpp</h3>
+    <hr />
+    <a href="Catalog.htm">[To Main Catalog]</a>
+    <hr />
+    <div id="dependency" class="indent">
+        <h4>Dependencies:</h4>
+        <a href="Cpp11-TypeTable.h.htm">Cpp11-TypeTable.h</a>
+        <a href="Cpp11-TypeAnal.h.htm">Cpp11-TypeAnal.h</a>
+    </div>
+    <hr />
+<pre id="code">
+///////////////////////////////////////////////////////////////
+// TypeAnal.h -  Utility for type analysis based on TypeTalbe//
+//                                                           //
+// Language:    Visual C++                                   //
+// Platform:    Alienware15, Windows 10                      //
+// Author:      Zhen Xia, CIS687, Syracuse University        //
+///////////////////////////////////////////////////////////////
+#include "TypeAnal.h"
+#include "../Parser/ConfigureParser.h"
+
+using namespace CodeAnalysis;
+
+///////////////////////////////////////////////////////////////
+// class: TypeAnal - Utility for analyzing type information 
+//                   
+//----&lt; constructor &gt;---------------------------------------------------
+
+TypeAnal::TypeAnal(TypeTable& table)
+<button id="0" type="button" onclick="expand(0,1)">-</button>	: ASTref_(Repository::getInstance()-&gt;AST()), TPtable(table) <span id = "1">{}</span>
+//----&lt; deconstructor &gt;-------------------------------------------------
+
+<button id="2" type="button" onclick="expand(2,3)">-</button>TypeAnal::~TypeAnal() <span id = "3">{}</span>
+//----&lt; set AST inside TypeAnyal for analysis &gt;-------------------------
+
+void TypeAnal::doTypeAnal()
+<button id="4" type="button" onclick="expand(4,5)">-</button><span id = "5">{
+	std::cout &lt;&lt; "\n  scanning AST and displaying important things:";
+	std::cout &lt;&lt; "\n -----------------------------------------------";
+
+	ASTNode* pRoot = ASTref_.root();
+	DFS(pRoot); // DFS start from root node
+}</span>
+//----&lt; walk through the entire AST by DFS&gt;-----------------------------
+
+void TypeAnal::DFS(ASTNode* pNode)
+<button id="6" type="button" onclick="expand(6,7)">-</button><span id = "7">{
+	static std::string path = "";
+	if (pNode-&gt;path_ != path)
+<button id="8" type="button" onclick="expand(8,9)">-</button>	<span id = "9">{
+		std::cout &lt;&lt; "\n    -- " &lt;&lt; pNode-&gt;path_ &lt;&lt; "\\" &lt;&lt; pNode-&gt;package_;
+		path = pNode-&gt;path_;
+	}</span>
+	doAction(pNode); // store the type information
+	for (auto pChild : pNode-&gt;children_)//do DFS for every child of pChild
+		DFS(pChild);
+}</span>
+//----&lt; save information for every node &gt;-------------------------------
+
+bool TypeAnal::doAction(ASTNode* node)
+<button id="10" type="button" onclick="expand(10,11)">-</button><span id = "11">{
+	// always remember the name of closest namespace
+	static std::string lastnmsp_ = "Global Namespace";
+	if (node-&gt;type_ == "namespace")
+		lastnmsp_ = node-&gt;name_;
+	//don't store type information of class function and main
+	if ((node-&gt;type_ == "function" && node-&gt;parentType_ != "namespace") || node-&gt;name_ == "main")
+		return false;
+
+	std::vector&lt;TableRecord *&gt;& tem_table = TPtable.getTable();
+	if (node-&gt;type_ == "namespace" || node-&gt;type_ == "class" || node-&gt;type_ == "struct" || node-&gt;type_ == "function" || node-&gt;type_=="enum")
+<button id="12" type="button" onclick="expand(12,13)">-</button>	<span id = "13">{
+		//only store information for the type above
+		TableRecord* tem_record = new TableRecord();
+		tem_record-&gt;type_ = node-&gt;type_;
+		tem_record-&gt;parentType_ = node-&gt;parentType_;
+		tem_record-&gt;name_ = node-&gt;name_;
+		tem_record-&gt;namespace_ = lastnmsp_;
+		tem_record-&gt;package_ = node-&gt;package_;
+		tem_record-&gt;path_ = node-&gt;path_;
+		if (node-&gt;type_ == "function")
+			tem_record-&gt;type_ = "globalfunction"; //set range to global for global function
+		tem_table.push_back(tem_record);//store type information in table for one node
+	}</span>
+
+	for (auto item : node-&gt;decl_)
+		if ((item.declType_ == DeclType::dataDecl && node-&gt;type_ == "namespace") || item.declType_ == DeclType::usingDecl
+			||item.declType_ == DeclType::typedefDecl)
+<button id="14" type="button" onclick="expand(14,15)">-</button>		<span id = "15">{
+			TableRecord* tem_record = new TableRecord();
+			tem_record-&gt;type_ = item.type_;
+			if (item.declType_ == DeclType::dataDecl && node-&gt;type_ == "namespace")
+				tem_record-&gt;type_ = "global" + tem_record-&gt;type_;
+			tem_record-&gt;parentType_ = node-&gt;type_;
+			tem_record-&gt;name_ = item.name_;
+			tem_record-&gt;namespace_ = lastnmsp_;
+			tem_record-&gt;package_ = item.package_;
+			tem_record-&gt;path_ = item.path_;
+			tem_table.push_back(tem_record);
+		}</span>
+	return true;
+}</span>
+//----&lt; just for looking at the content &gt;-------------------------------
+
+bool TypeAnal::doDisplay(ASTNode* node)
+<button id="16" type="button" onclick="expand(16,17)">-</button><span id = "17">{
+	static std::string lastnmsp_ = "anonymous";
+	if (node-&gt;type_ == "namespace")
+		lastnmsp_ = node-&gt;name_;
+
+	TableRecord* tem_record = new TableRecord();
+	tem_record-&gt;type_ = node-&gt;type_;
+	tem_record-&gt;parentType_ = node-&gt;parentType_;
+	tem_record-&gt;name_ = node-&gt;name_;
+	tem_record-&gt;namespace_ = lastnmsp_;
+	tem_record-&gt;path_ = node-&gt;path_;
+	std::vector&lt;TableRecord *&gt;& tem_table = TPtable.getTable();
+	tem_table.push_back(tem_record);
+	return true;
+}</span>
+#ifndef TypeAnal_H
+#define TypeAnal_H
+
+#include "../FileSystem/FileSystem.h"
+
+using Utils = Utilities::StringHelper;
+
+void main()
+<button id="18" type="button" onclick="expand(18,19)">-</button><span id = "19">{
+	Utils::Title("Testing TypeAnal and TypeTable");
+	//get all the ".h" and ".cpp" files from the current directory
+	std::vector&lt;std::string&gt; currfiles = FileSystem::Directory::getFiles("../FileSystem", "*.h");
+	std::vector&lt;std::string&gt; currfiles1 = FileSystem::Directory::getFiles("../FileSystem", "*.cpp");
+	for (size_t i = 0; i &lt; currfiles1.size(); ++i)
+		currfiles.push_back(currfiles1[i]);
+<button id="20" type="button" onclick="expand(20,21)">-</button>	for (size_t i = 0; i &lt; currfiles.size(); ++i)<span id = "21">{
+		FileSystem::Directory::setCurrentDirectory("../FileSystem");
+		currfiles[i] = FileSystem::Path::getFullFileSpec(currfiles[i]);
+		std::cout &lt;&lt; "\n  Retreving file: " &lt;&lt; currfiles[i].c_str();}</span>
+	Utilities::putline();
+	Utils::title("Starting Type Analysis the files");
+	ConfigParseForCodeAnal configure;
+	Parser* pParser = configure.Build(); //build rules and actions
+	for (size_t i = 0; i &lt; currfiles.size(); ++i)
+<button id="22" type="button" onclick="expand(22,23)">-</button>	<span id = "23">{
+		try
+<button id="24" type="button" onclick="expand(24,25)">-</button>		<span id = "25">{
+			if (pParser)
+<button id="26" type="button" onclick="expand(26,27)">-</button>			<span id = "27">{
+				if (!configure.Attach(currfiles[i]))
+<button id="28" type="button" onclick="expand(28,29)">-</button>				<span id = "29">{
+					std::cout &lt;&lt; "\n  could not open file " &lt;&lt; currfiles[i] &lt;&lt; std::endl;
+				}</span>
+			}</span>
+<button id="30" type="button" onclick="expand(30,31)">-</button>			else<span id = "31">{
+				std::cout &lt;&lt; "\n\n  Parser not built\n\n";
+				return;}</span>
+			// now that parser is built, use it
+			Repository* pRepo = Repository::getInstance();
+			pRepo-&gt;currentPath() = currfiles[i];
+			pRepo-&gt;package() = FileSystem::Path::getName(currfiles[i]);
+			while (pParser-&gt;next())
+				pParser-&gt;parse();}</span>
+<button id="32" type="button" onclick="expand(32,33)">-</button>		catch (std::exception& ex)<span id = "33">{
+			std::cout &lt;&lt; "\n\n    " &lt;&lt; ex.what() &lt;&lt; "\n\n";}</span>
+	}</span>
+	TypeTable tb("Project2 File");
+	TypeAnal tpa(tb);
+	tpa.doTypeAnal();
+	std::cout &lt;&lt; tb.show();
+}</span>
+#endif
+</pre>
+</body>
+</html>

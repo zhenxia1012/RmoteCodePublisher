@@ -1,0 +1,266 @@
+<!----------------------------------------------------------------------------
+   - Html file of source code file from Project #3
+  Zhen Xia, CSE687 - Object Oriented Design, Spring 2017
+----------------------------------------------------------------------------->
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="Publisher.css" />
+    <script src="script.js"></script>
+</head>
+<body>
+    <h3 id="filename">Cpp11-DependencyAnal.cpp</h3>
+    <hr />
+    <a href="Catalog.htm">[To Main Catalog]</a>
+    <hr />
+    <div id="dependency" class="indent">
+        <h4>Dependencies:</h4>
+        <a href="Cpp11-DependencyAnal.h.htm">Cpp11-DependencyAnal.h</a>
+        <a href="Cpp11-TypeTable.h.htm">Cpp11-TypeTable.h</a>
+        <a href="Cpp11-TypeAnal.h.htm">Cpp11-TypeAnal.h</a>
+    </div>
+    <hr />
+<pre id="code">
+///////////////////////////////////////////////////////////////
+// DependencyAnal.cpp - Utility for dependency analysis based//
+//                     type table                            //
+//                                                           //
+// Language:    Visual C++                                   //
+// Platform:    Alienware15, Windows 10                      //
+// Author:      Zhen Xia, CIS687, Syracuse University        //
+///////////////////////////////////////////////////////////////
+#include &lt;fstream&gt;
+#include &lt;exception&gt;
+#include "DependencyAnal.h"
+
+using namespace CodeAnalysis;
+
+///////////////////////////////////////////////////////////////
+// class: DependencyAnal - Do the Dependency Analysis based on
+//                         TypeTable
+//
+//----&lt; constructor &gt;---------------------------------------------------
+
+DependencyAnal::DependencyAnal(TypeTable& table, NoSqlDb&lt;std::string&gt;& dtbs_)
+<button id="0" type="button" onclick="expand(0,1)">-</button>	: TPtable(table), db_(dtbs_), ASTref_(Repository::getInstance()-&gt;AST()) <span id = "1">{}</span>
+//----&lt; deconstructor &gt;-------------------------------------------------
+
+<button id="2" type="button" onclick="expand(2,3)">-</button>DependencyAnal::~DependencyAnal() <span id = "3">{}</span>
+//----&lt; extract all the paths from type table &gt;-------------------------
+
+void DependencyAnal::etractFiles()
+<button id="4" type="button" onclick="expand(4,5)">-</button><span id = "5">{
+	ASTNode* pRoot = ASTref_.root();
+	DFS(pRoot); // DFS start from root node
+}</span>
+//----&lt; walk through the entire AST by DFS &gt;----------------------------
+void DependencyAnal::DFS(ASTNode* pNode)
+<button id="6" type="button" onclick="expand(6,7)">-</button><span id = "7">{
+	if (pNode-&gt;path_ != "")
+<button id="8" type="button" onclick="expand(8,9)">-</button>	<span id = "9">{
+		//std::cout &lt;&lt; "\n    -- " &lt;&lt; pNode-&gt;path_ &lt;&lt; "\\" &lt;&lt; pNode-&gt;package_;
+		//ensure whether the file has been included
+		std::vector&lt;std::string&gt;::iterator iter = std::find(begin(files), end(files), pNode-&gt;path_);
+		if (iter == end(files))
+			files.push_back(pNode-&gt;path_);
+		return;
+	}</span>
+	for (auto pChild : pNode-&gt;children_)//do DFS for every child of pChild
+		DFS(pChild);
+}</span>
+//----&lt; initialize database for every file &gt;----------------------------
+
+void DependencyAnal::iniDb()
+<button id="10" type="button" onclick="expand(10,11)">-</button><span id = "11">{
+	// for every file, initialize a element in db
+	for (auto item : files)
+<button id="12" type="button" onclick="expand(12,13)">-</button>	<span id = "13">{
+		std::string filename = FileSystem::Path::getName(item);
+		Element&lt;std::string&gt; tem_file;
+		tem_file.key = filename;
+		tem_file.name = filename;
+		tem_file.category = "Test";
+		tem_file.description = item;
+		tem_file.timeDate = "none";
+		tem_file.data = filename + " data";
+		db_.save(tem_file.name, tem_file);
+	}</span>
+}</span>
+//----&lt; do dependency analysis &gt;----------------------------------------
+
+void DependencyAnal::doDepenAnal()
+<button id="14" type="button" onclick="expand(14,15)">-</button><span id = "15">{
+	using namespace Scanner;
+	std::vector&lt;TableRecord*&gt; temrecords = TPtable.getTable();
+	//for every record in talbe, find type name at first
+	for (auto item : temrecords)
+<button id="16" type="button" onclick="expand(16,17)">-</button>	<span id = "17">{
+		//std::cout &lt;&lt; "\n   Path: " &lt;&lt; item-&gt;path_;
+		//don't find dependency for namespace
+		if (item-&gt;type_ == "namespace")
+			continue;
+		std::string typename_ = item-&gt;name_; // get the type name
+		//std::cout &lt;&lt; "\n  Need to find: " &lt;&lt; typename_;
+		for (auto file : files)
+<button id="18" type="button" onclick="expand(18,19)">-</button>		<span id = "19">{
+			std::string srcfile = FileSystem::Path::getName(item-&gt;path_);
+			std::string dstfile = FileSystem::Path::getName(file);
+			//std::cout &lt;&lt; "\n  Test dependency: " &lt;&lt; dstfile &lt;&lt; " with " &lt;&lt; srcfile;
+			if (srcfile == dstfile) // don't find dependency for the same file
+				continue;
+			// don't find dependency for two files having been recorded for their dependency
+			if (doFind(srcfile, dstfile))
+				continue;
+			std::ifstream in(file);
+			if (!in.good())
+<button id="20" type="button" onclick="expand(20,21)">-</button>			<span id = "21">{
+				std::cout &lt;&lt; "\n  can't open \"" &lt;&lt; file &lt;&lt; "\"\n\n";
+				return;
+			}</span>
+<button id="22" type="button" onclick="expand(22,23)">-</button>			<span id = "23">{
+				Toker toker;
+				toker.returnComments(false);
+				toker.attach(&in);
+				do
+<button id="24" type="button" onclick="expand(24,25)">-</button>				<span id = "25">{
+					std::string tok = toker.getTok();
+					//std::cout &lt;&lt; "\n   Type: " &lt;&lt; typename_ &lt;&lt; " Tok: " &lt;&lt; tok;
+					// if having find type name, then to find namespace
+					if (typename_ != tok || !isDep(item-&gt;namespace_, file))
+						continue;
+					else
+<button id="26" type="button" onclick="expand(26,27)">-</button>					<span id = "27">{
+						//std::cout &lt;&lt; "\n  Dependency: " &lt;&lt; dstfile &lt;&lt; " on " &lt;&lt; srcfile;
+						doSave(srcfile, dstfile);
+						break;
+					}</span>
+				}</span> while (in.good());}</span>}</span>}</span>
+}</span>
+//----&lt; decide whether child file have depended on parent file &gt;--------
+
+bool DependencyAnal::doFind(std::string parent, std::string child)
+<button id="28" type="button" onclick="expand(28,29)">-</button><span id = "29">{
+	std::vector&lt;std::string&gt; setOfChild = db_.value(parent).children;
+	//std::cout &lt;&lt; "\n  Size of children: " &lt;&lt; setOfChild.size();
+	for (auto item : setOfChild)
+<button id="30" type="button" onclick="expand(30,31)">-</button>	<span id = "31">{
+		if (child == item)
+<button id="32" type="button" onclick="expand(32,33)">-</button>		<span id = "33">{
+			//std::cout &lt;&lt; "\n  file \"" &lt;&lt; child &lt;&lt; "\" has been a child of file \"" &lt;&lt; parent &lt;&lt; "\"";
+			return true;
+		}</span>
+		//std::cout &lt;&lt; "\n  two childs not: " &lt;&lt; child &lt;&lt; " and " &lt;&lt; item;
+	}</span>
+	return false;
+}</span>
+//----&lt; find token in child Type Table &gt;--------------------------------
+
+bool DependencyAnal::isDep(std::string token, std::string path)
+<button id="34" type="button" onclick="expand(34,35)">-</button><span id = "35">{
+	using namespace Scanner;
+
+	std::ifstream in(path);
+	if (!in.good())
+<button id="36" type="button" onclick="expand(36,37)">-</button>	<span id = "37">{
+		std::cout &lt;&lt; "\n  can't open \"" &lt;&lt; path &lt;&lt; "\"\n\n";
+		return false;
+	}</span>
+<button id="38" type="button" onclick="expand(38,39)">-</button>	<span id = "39">{
+		Toker toker;
+		toker.returnComments(false);
+		toker.attach(&in);
+		do
+<button id="40" type="button" onclick="expand(40,41)">-</button>		<span id = "41">{
+			std::string tok = toker.getTok();
+			//std::cout &lt;&lt; "\n   Type: " &lt;&lt; typename_ &lt;&lt; " Tok: " &lt;&lt; tok;
+			if (token != tok)
+				continue;
+			else
+				return true;
+		}</span> while (in.good());
+	}</span>
+	return false;
+}</span>
+
+/*bool DependencyAnal::isDep(std::string token, std::string path)
+<button id="42" type="button" onclick="expand(42,43)">-</button><span id = "43">{
+	std::vector&lt;TableRecord*&gt; temrecords = TPtable.getTable();
+	for (auto item : temrecords)
+		if (item-&gt;path_ == path)
+			if (item-&gt;name_ != token)
+				return true;
+	//std::cout &lt;&lt; "\n  No dependency!";
+	return false;
+}</span>*/
+//----&lt; save dependency into database &gt;---------------------------------
+
+bool DependencyAnal::doSave(std::string parent, std::string child)
+<button id="44" type="button" onclick="expand(44,45)">-</button><span id = "45">{
+	if (!db_.edit(parent, "children", child, true))
+<button id="46" type="button" onclick="expand(46,47)">-</button>	<span id = "47">{
+		//std::cout &lt;&lt; "\n  Couldn't save child file \"" &lt;&lt; child &lt;&lt; "\" to parent file \"" &lt;&lt; parent &lt;&lt; "\".";
+		return false;
+	}</span>
+	//std::cout &lt;&lt; "\n  Saving child file \"" &lt;&lt; child &lt;&lt; "\" to parent file \"" &lt;&lt; parent &lt;&lt; "\".";
+	return true;
+}</span>
+
+#ifdef TEST_DEPENDENCYANAL
+
+#include "../Utilities/Utilities.h"
+#include "../TypeAnal/TypeAnal.h"
+
+
+using Utils = Utilities::StringHelper;
+
+void main()
+<button id="48" type="button" onclick="expand(48,49)">-</button><span id = "49">{
+	Utils::Title("Testing DependencyAnal");
+	Utils::title("Start fetching files");
+	std::vector&lt;std::string&gt; currfiles = FileSystem::Directory::getFiles("../Analyzer", "*.h");
+	std::vector&lt;std::string&gt; currfiles1 = FileSystem::Directory::getFiles("../Analyzer", "*.cpp");
+	for (size_t i = 0; i &lt; currfiles1.size(); ++i)
+		currfiles.push_back(currfiles1[i]);
+<button id="50" type="button" onclick="expand(50,51)">-</button>	for (size_t i = 0; i &lt; currfiles.size(); ++i)<span id = "51">{
+		FileSystem::Directory::setCurrentDirectory("../Analyzer");
+		currfiles[i] = FileSystem::Path::getFullFileSpec(currfiles[i]);
+		std::cout &lt;&lt; "\n  Fetching file: " &lt;&lt; currfiles[i].c_str();
+	}</span>Utilities::putline();
+	Utils::title("Start parsing all the files");
+	ConfigParseForCodeAnal configure;
+	Parser* pParser = configure.Build();
+<button id="52" type="button" onclick="expand(52,53)">-</button>	for (size_t i = 0; i &lt; currfiles.size(); ++i)<span id = "53">{
+		std::cout &lt;&lt; "\n  Processing file: " &lt;&lt; currfiles[i];
+<button id="54" type="button" onclick="expand(54,55)">-</button>		try<span id = "55">{
+<button id="56" type="button" onclick="expand(56,57)">-</button>			if (pParser)<span id = "57">{
+<button id="58" type="button" onclick="expand(58,59)">-</button>				if (!configure.Attach(currfiles[i]))<span id = "59">{
+					std::cout &lt;&lt; "\n  could not open file " &lt;&lt; currfiles[i] &lt;&lt; std::endl;}</span>}</span>
+<button id="60" type="button" onclick="expand(60,61)">-</button>			else<span id = "61">{
+				std::cout &lt;&lt; "\n\n  Parser not built\n\n";
+				return;}</span>
+			Repository* pRepo = Repository::getInstance();
+			pRepo-&gt;currentPath() = currfiles[i];
+			while (pParser-&gt;next())
+				pParser-&gt;parse();}</span>
+		catch (std::exception& ex)
+<button id="62" type="button" onclick="expand(62,63)">-</button>		<span id = "63">{std::cout &lt;&lt; "\n\n    " &lt;&lt; ex.what() &lt;&lt; "\n\n";}</span>
+	}</span>
+	Utils::Title("Start Type Analysis");
+	TypeTable tb("Project2 Table");
+	NoSqlDb&lt;std::string&gt; db("Project2 Database");
+	TypeAnal tpa(tb);
+	tpa.doTypeAnal();
+	std::cout &lt;&lt; tb.show();
+	Utils::title("Starting Dependency Analysis");
+	DependencyAnal dpa(tb, db);
+	dpa.etractFiles();
+	dpa.iniDb();
+	dpa.doDepenAnal();
+	db.showData();
+	Utils::title("Show the XML of database");
+	std::string data_xml = Persist::toXml(db);
+	std::cout &lt;&lt; "\n" &lt;&lt; data_xml;
+}</span>
+#endif
+</pre>
+</body>
+</html>
