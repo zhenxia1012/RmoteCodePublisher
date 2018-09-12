@@ -1,0 +1,10 @@
+﻿  XmlDocument.cpp
+  XmlParser.cpp
+\\hd.ad.syr.edu\03\2de5c5\documents\desktop\zhen xia\project 3\project3-codepublisher-zhen xia\xmldocument\xmlparser\xmlparser.cpp(127): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+\\hd.ad.syr.edu\03\2de5c5\documents\desktop\zhen xia\project 3\project3-codepublisher-zhen xia\xmldocument\xmlparser\xmlparser.cpp(129): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+\\hd.ad.syr.edu\03\2de5c5\documents\desktop\zhen xia\project 3\project3-codepublisher-zhen xia\xmldocument\xmlparser\xmlparser.cpp(193): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  XmlElement.cpp
+  xmlElementParts.cpp
+  Tokenizer.cpp
+  Generating Code...
+  XmlDocument.vcxproj -> \\hd.ad.syr.edu\03\2de5c5\Documents\Desktop\Zhen Xia\Project 3\Project3-CodePublisher-Zhen Xia\x64\Debug\XmlDocument.lib
