@@ -1,0 +1,14 @@
+﻿  Parser.cpp
+  ConfigureParser.cpp
+  ActionsAndRules.cpp
+  Utilities.cpp
+  Tokenizer.cpp
+  SemiExp.cpp
+  ScopeStack.cpp
+  Logger.cpp
+  GrammarHelpers.cpp
+  FileSystem.cpp
+  AbstrSynTree.cpp
+  正在生成代码...
+  Parser.vcxproj -> D:\Project4-Remote Code Publisher-Zhen Xia\Debug\Parser.exe
+  Parser.vcxproj -> D:\Project4-Remote Code Publisher-Zhen Xia\Debug\Parser.pdb (Full PDB)
