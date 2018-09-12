@@ -1,0 +1,230 @@
+
+  <KeyValueDb>
+    <Element>
+      <key>
+        elem1
+      </key>
+      <name>
+        elem1
+      </name>
+      <category>
+        test1
+      </category>
+      <description>
+        elem1's description
+      </description>
+      <children>
+        <childkey>
+          elem2
+        </childkey>
+        <childkey>
+          elem3
+        </childkey>
+        <childkey>
+          elem4
+        </childkey>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem1's StrData from test1
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem2
+      </key>
+      <name>
+        elem2
+      </name>
+      <category>
+        test1
+      </category>
+      <description>
+        elem2's description
+      </description>
+      <children>
+        <childkey>
+          elem3
+        </childkey>
+        <childkey>
+          elem4
+        </childkey>
+        <childkey>
+          elem5
+        </childkey>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem2's StrData from test1
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem3
+      </key>
+      <name>
+        elem3
+      </name>
+      <category>
+        test2
+      </category>
+      <description>
+        elem1's description
+      </description>
+      <children>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem3's StrData from test2
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem4
+      </key>
+      <name>
+        elem4
+      </name>
+      <category>
+        practice1
+      </category>
+      <description>
+        elem4's description
+      </description>
+      <children>
+        <childkey>
+          elem2
+        </childkey>
+        <childkey>
+          elem3
+        </childkey>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem4's StrData from practice1
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem5
+      </key>
+      <name>
+        elem5
+      </name>
+      <category>
+        practice1
+      </category>
+      <description>
+        elem5's description
+      </description>
+      <children>
+        <childkey>
+          elem1
+        </childkey>
+        <childkey>
+          elem6
+        </childkey>
+        <childkey>
+          elem7
+        </childkey>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem5's StrData from practice1
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem6
+      </key>
+      <name>
+        elem6
+      </name>
+      <category>
+        exam1
+      </category>
+      <description>
+        elem6's description
+      </description>
+      <children>
+        <childkey>
+          elem2
+        </childkey>
+        <childkey>
+          elem5
+        </childkey>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem6's StrData from exam1
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem7
+      </key>
+      <name>
+        elem7
+      </name>
+      <category>
+        exam1
+      </category>
+      <description>
+        elem7s description
+      </description>
+      <children>
+      </children>
+      <timeDate>
+        2017-02-07 18:40:18
+      </timeDate>
+      <data>
+        elem7s
+      </data>
+    </Element>
+    <Element>
+      <key>
+        elem8
+      </key>
+      <name>
+        elem8
+      </name>
+      <category>
+        exam2
+      </category>
+      <description>
+        elem8's description
+      </description>
+      <children>
+        <childkey>
+          elem2
+        </childkey>
+        <childkey>
+          elem3
+        </childkey>
+        <childkey>
+          elem4
+        </childkey>
+        <childkey>
+          elem7
+        </childkey>
+      </children>
+      <timeDate>
+        2017-02-07 17:41:17
+      </timeDate>
+      <data>
+        elem8's StrData from exam2
+      </data>
+    </Element>
+  </KeyValueDb>

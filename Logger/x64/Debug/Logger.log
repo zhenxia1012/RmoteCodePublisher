@@ -1,0 +1,6 @@
+﻿  Logger.cpp
+  Utilities.cpp
+  Cpp11-BlockingQueue.cpp
+  正在生成代码...
+Cpp11-BlockingQueue.obj : warning LNK4221: 
+  Logger.vcxproj -> E:\Study\SU Master\CSE687\Project\Project3\Project3-CodePublisher-Zhen Xia\x64\Debug\Logger.lib
